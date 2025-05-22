@@ -31,4 +31,4 @@ The Smart Train Bogie Locking & Alert System is a safety-focused embedded soluti
 ## Setup Instructions
 1. Clone this repository:  
    ```bash
-   git clone https://github.com/USERNAME/train-bogie-locking-system.git
+   git clone https://github.com/Onlykrshnna/train-bogie-locking-system.git
