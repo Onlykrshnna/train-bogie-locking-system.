@@ -1,34 +1,96 @@
-# train-bogie-locking-system.
-# Smart Train Bogie Locking & Alert System
+# Smart Train Bogie Locking & Alert System with SMS Control & LCD Display
 
 ## Project Overview
-The Smart Train Bogie Locking & Alert System is a safety-focused embedded solution designed to automatically secure train bogie doors while the train is in motion and unlock them only at authorized stops. It enhances passenger security by preventing unauthorized door openings during transit and sends real-time alerts to the control center in case of any security breaches or system faults.
 
-## Key Features
-- Automatic locking of bogie doors when the train is moving
-- Safe unlocking only when the train has fully stopped at stations
-- Real-time SMS alerts via GSM module on unauthorized access or tampering
-- Manual override functionality for emergency access
-- Reliable sensor integration to monitor door status and train movement
+This project aims to enhance railway safety by automatically securing train bogie doors and providing real-time monitoring, alerting, and remote control capabilities. The system locks or unlocks bogie doors using a servo motor, monitors door status via an IR sensor, and displays the current status on a 16x2 I2C LCD screen. Unauthorized door openings trigger SMS alerts to railway authorities through a SIM800L GSM module. Additionally, authorized users can remotely control door locking/unlocking by sending SMS commands (“OPEN” or “CLOSE”) to the system.
 
-## Technologies Used
-- **Hardware:** Arduino Uno, IR Sensors, Speed Sensor, Magnetic Door Sensors, GSM Module (SIM800L), Motor Driver, DC Motors/Servos
-- **Software:** Arduino IDE, Embedded C/C++, AT Commands for GSM communication
+---
 
-## Challenges Faced
-- Sensor calibration to minimize false triggers during train slowdowns
-- Ensuring reliable GSM communication and alert delivery
-- Designing fail-safe manual override controls
-- Simulating realistic train conditions for testing purposes
+## Features
+
+- **Automatic Door Locking & Unlocking** via servo motor  
+- **Real-time Door Status Monitoring** using IR sensor  
+- **Visual Status Display** on 16x2 I2C LCD (Locked/Unlocked, alerts)  
+- **SMS Alerts** for unauthorized door opening or tampering  
+- **Remote Door Control via SMS Commands** (“OPEN” / “CLOSE”)  
+- **LED Indicators** for door lock status (Green = Locked, Red = Unlocked)  
+- **Audible Buzzer Alerts** during unauthorized access  
+- **Low Power Operation** with 3.7V Li-ion battery and voltage regulation  
+- **Cost-effective & Easily Deployable** with widely available components  
+
+---
+
+## Hardware Components
+
+| Component              | Description                                   |
+|-----------------------|-----------------------------------------------|
+| Arduino Uno R3         | Microcontroller board                         |
+| TCRT5000 IR Sensor     | Door position detection                        |
+| MG995 Servo Motor      | Door locking/unlocking                         |
+| SIM800L GSM Module     | SMS alerts and remote command reception       |
+| 16x2 I2C LCD Display   | System status display                          |
+| LEDs (Red & Green)     | Lock status indicators                         |
+| Buzzer                 | Audible alarm for unauthorized access         |
+| 18650 Li-ion Battery   | Portable power source                          |
+| AMS1117 Voltage Regulator | Stable 5V supply for GSM module               |
+
+---
+
+## Circuit Diagram
+
+![Circuit Diagram](link_to_circuit_diagram_image)
+
+*Link to the detailed circuit diagram.*
+
+---
 
 ## How It Works
-1. The system continuously monitors train movement and door status through sensors.
-2. Doors lock automatically when the train starts moving.
-3. Doors unlock only when the train stops fully at designated stations.
-4. Any unauthorized door opening triggers an immediate SMS alert to the control center.
-5. Authorized personnel can manually override door locks during emergencies.
 
-## Setup Instructions
-1. Clone this repository:  
-   ```bash
-   git clone https://github.com/Onlykrshnna/train-bogie-locking-system.git
+1. **Monitoring:** IR sensor detects bogie door open/closed status.  
+2. **Locking:** Servo locks the door automatically once closed.  
+3. **Alerts:** Unauthorized door openings trigger buzzer, LEDs, LCD alerts, and SMS notifications.  
+4. **Remote Control:** Authorized SMS commands remotely open/close door with confirmation SMS.  
+5. **Display:** LCD continuously updates current door status for onboard staff.
+
+---
+
+## Installation & Usage
+
+### Setup Hardware
+
+1. Assemble components as per the circuit diagram.  
+2. Insert SIM card with SMS capability into SIM800L module.  
+3. Connect the 3.7V Li-ion battery with proper voltage regulation.  
+4. Ensure servo and sensors are securely mounted on bogie door.
+
+### Upload Code
+
+1. Install Arduino IDE from [arduino.cc](https://www.arduino.cc/en/software).  
+2. Add required libraries: `Servo.h`, `SoftwareSerial.h`, `LiquidCrystal_I2C.h`.  
+3. Replace phone number in the code with your own for SMS confirmation.  
+4. Upload the Arduino sketch to the Arduino Uno board.
+
+### Operation
+
+- The system will automatically lock/unlock doors based on sensor input.  
+- Unauthorized openings will send SMS alerts to the configured number.  
+- Send “OPEN” or “CLOSE” via SMS to remotely control the door.  
+
+---
+
+## Code Snippet
+
+```cpp
+// Example function to handle SMS commands
+void handleSMS(String sms) {
+  sms.trim();
+  sms.toUpperCase();
+
+  if (sms.indexOf("OPEN") != -1) {
+    unlockDoor();
+    sendSMS("Door is now OPENED.");
+  } else if (sms.indexOf("CLOSE") != -1) {
+    lockDoor();
+    sendSMS("Door is now LOCKED.");
+  }
+}
